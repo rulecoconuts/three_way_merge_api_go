@@ -1,5 +1,8 @@
 # three_way_merge_api_go
- An API that attempts to automatically merge the changes in 2 files against an original file
+ An API that attempts to automatically merge the changes in 2 files against an original file. This project is designed to improve the efficiency and correctness of the 3-way merge algorithm. It is a component of the Langresus project.
+
+![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
+
 
 ## How to use
 
@@ -33,5 +36,3 @@ The following command will install the necessary packages for the API and experi
 ```shell
 bash run_all.sh
 ```
-
-![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
