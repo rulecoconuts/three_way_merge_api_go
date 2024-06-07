@@ -25,3 +25,5 @@ If you do not want to deal with the API directly. You can run the simple 3-way m
 cd frontend
 npm run dev
 ```
+
+![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
