@@ -17,13 +17,21 @@ go run .
 Then send a POST request with file form data with the following names:
 original_file, a_file, b_file
 
-### Run the web experimentation tool
+### Run the experimentation tool web app
 
-If you do not want to deal with the API directly. You can run the simple 3-way merge experimentation/improvement tool.
+If you do not want to deal with the API directly, you can run the simple 3-way merge experimentation/improvement tool web app.
 
 ```shell
 cd frontend
 npm run dev
+```
+
+### Skip the hassle and run all components at once
+
+The following command will install the necessary packages for the API and experimentation tool, assuming that npm and Go have been installed.
+
+```shell
+bash run_all.sh
 ```
 
 ![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
