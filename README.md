@@ -31,7 +31,7 @@ npm run dev
 
 ### Skip the hassle and run all components at once
 
-The following command will install the necessary packages for the API and experimentation tool, assuming that npm and Go have been installed.
+The following command will install the necessary packages for the API and experimentation tool before running them, assuming that npm and Go have been installed.
 
 ```shell
 bash run_all.sh
