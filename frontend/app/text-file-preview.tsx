@@ -8,7 +8,7 @@ interface TextFilePreviewProps {
 export default function TextFilePreview({ file, className }: TextFilePreviewProps) {
     const [text, setText] = useState<string>("");
     useEffect(() => {
-        file.text()
+        file.slice(0, 600).text()
             .then((content) => {
                 setText(content);
             })
