@@ -1,6 +1,10 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	// gin.SetMode(gin.ReleaseMode)
@@ -9,6 +13,8 @@ func main() {
 	router.POST("/merge", func(c *gin.Context) {
 
 		form, _ := c.MultipartForm()
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		fmt.Println(form.File)
 
 		originalFileHeader := form.File["original_file"][0]
 		aFileHeader := form.File["a_file"][0]
