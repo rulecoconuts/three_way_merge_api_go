@@ -17,17 +17,20 @@ go mod tidy
 go run .
 ```
 
-Then send a POST request with file form data with the following names:
+Send a POST request to http://localhost:8000/merge with file form data with the following names:
 original_file, a_file, b_file
 
 ### Run the experimentation tool web app
 
 If you do not want to deal with the API directly, you can run the simple 3-way merge experimentation/improvement tool web app.
 
+Run the following command: 
 ```shell
 cd frontend
 npm run dev
 ```
+
+Then visit the web app at http://localhost:3000
 
 ### Skip the hassle and run all components at once
 
