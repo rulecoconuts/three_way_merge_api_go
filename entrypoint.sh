@@ -1,3 +1,4 @@
 cd frontend
 npm i
-../three_way_merge & npm run && fg
+npm run build
+../three_way_merge & npm run start && fg

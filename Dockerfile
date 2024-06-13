@@ -18,4 +18,6 @@ RUN go build
 
 EXPOSE 3000 8000
 
+VOLUME [ "/main/frontend/node_modules" ]
+
 ENTRYPOINT [ "sh", "entrypoint.sh" ]
