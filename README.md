@@ -36,3 +36,9 @@ The following command will install the necessary packages for the API and experi
 ```shell
 bash run_all.sh
 ```
+
+You can also just run the entire project as a Docker container by running the following command:
+
+```shell
+bash run_docker.sh
+```

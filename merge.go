@@ -14,6 +14,11 @@ type MergeResult struct {
 	mergedFromB []int
 }
 
+type MergeSummary struct {
+	aConflictPositions []int
+	bConflictPositions []int
+}
+
 // Perform 3 way merge on indices of original, a, and b
 func Merge(original []string, a []string, b []string) MergeResult {
 	mergedFromA := make([]int, 0, 1)
