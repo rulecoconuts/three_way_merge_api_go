@@ -113,16 +113,16 @@ func MergeFromMultipartFileIntoWriter(original multipart.File, a multipart.File,
 
 		if bErr == nil && oErr == nil && aErr == nil {
 			// All files were read properly
-			if oLine == aLine && oLine == bLine {
+			if *oLine == *aLine && *oLine == *bLine {
 				// No changes were made
 				writer.Write([]byte(*oLine))
-			} else if oLine == aLine {
+			} else if *oLine == *aLine {
 				// Only b was changed
 				writer.Write([]byte(*bLine))
-			} else if oLine == bLine {
+			} else if *oLine == *bLine {
 				// Only a was changed
 				writer.Write([]byte(*aLine))
-			} else if aLine == bLine {
+			} else if *aLine == *bLine {
 				// The same change was made in a and b
 				writer.Write([]byte(*aLine))
 			} else {
@@ -137,7 +137,7 @@ func MergeFromMultipartFileIntoWriter(original multipart.File, a multipart.File,
 			writer.Write([]byte(*aLine))
 		} else if aErr == nil && bErr == nil {
 			// Both versions are valid and have gone farther than the original in terms of lines
-			if aLine == bLine {
+			if *aLine == *bLine {
 				writer.Write([]byte(*aLine))
 			} else {
 				// Conflict
@@ -168,57 +168,57 @@ func GetMergeAction(line int, original *string, v1 *string, v2 *string) (*MergeA
 	var action MergeAction
 
 	if original != nil && v1 != nil && v2 != nil {
-		if original == v1 && original == v2 {
+		if *original == *v1 && *original == *v2 {
 			// No change
-			action = MergeAction{reason: NO_CHANGE_MERGE_REASON, source: ORIGINAL_MERGE_SOURCE, line: line}
-		} else if original == v1 {
+			action = MergeAction{Reason: NO_CHANGE_MERGE_REASON, Source: ORIGINAL_MERGE_SOURCE, Line: line}
+		} else if *original == *v1 {
 			// Only V2 changed
-			action = MergeAction{reason: ONLY_ONE_CHANGE_MERGE_REASON, source: V2_MERGE_SOURCE, line: line}
-		} else if original == v2 {
+			action = MergeAction{Reason: ONLY_ONE_CHANGE_MERGE_REASON, Source: V2_MERGE_SOURCE, Line: line}
+		} else if *original == *v2 {
 			// Only V1 changed
-			action = MergeAction{reason: ONLY_ONE_CHANGE_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
-		} else if v1 == v2 {
+			action = MergeAction{Reason: ONLY_ONE_CHANGE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
+		} else if *v1 == *v2 {
 			// The same change was made
-			action = MergeAction{reason: SAME_CHANGE_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
+			action = MergeAction{Reason: SAME_CHANGE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 		} else {
-			action = MergeAction{reason: CONFLICT_MERGE_REASON, line: line}
+			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if original != nil && v1 != nil {
 		// Only V2 is invalid
 
-		if original == v1 {
+		if *original == *v1 {
 			// This means that the line, which exists in the original, was removed in V2
-			action = MergeAction{reason: LINE_REMOVED_IN_ONE_MERGE_REASON, source: V2_MERGE_SOURCE, line: line}
+			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V2_MERGE_SOURCE, Line: line}
 		} else {
 			// A change was made to this line in V1, and simultaneously removed in V2. We cannot decided which is right
-			action = MergeAction{reason: CONFLICT_MERGE_REASON, line: line}
+			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if original != nil && v2 != nil {
 		// Only V1 is invalid
 
-		if original == v2 {
+		if *original == *v2 {
 			// This means that the line, which exists in the original, was removed in V1
-			action = MergeAction{reason: LINE_REMOVED_IN_ONE_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
+			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 		} else {
 			// A change was made to this line in V2, and simultaneously removed in V1. We cannot decided which is right
-			action = MergeAction{reason: CONFLICT_MERGE_REASON, line: line}
+			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if v1 != nil && v2 != nil {
 		// V1 and V2 have surpassed the lines in original
-		if v1 == v2 {
-			action = MergeAction{reason: SAME_CHANGE_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
+		if *v1 == *v2 {
+			action = MergeAction{Reason: SAME_CHANGE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 		} else {
-			action = MergeAction{reason: CONFLICT_MERGE_REASON, line: line}
+			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if v1 != nil {
 		// Only V1 is valid. It is the correct choice by default
-		action = MergeAction{reason: ONLY_ONE_VALID_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
+		action = MergeAction{Reason: ONLY_ONE_VALID_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 	} else if v2 != nil {
 		// Only V2 is valid. It is the correct choice by default
-		action = MergeAction{reason: ONLY_ONE_VALID_MERGE_REASON, source: V2_MERGE_SOURCE, line: line}
+		action = MergeAction{Reason: ONLY_ONE_VALID_MERGE_REASON, Source: V2_MERGE_SOURCE, Line: line}
 	} else {
 		// The line exists only in the original. We will not keep it
-		action = MergeAction{reason: LINE_REEMOVED_IN_BOTH_MERGE_REASON, source: V1_MERGE_SOURCE, line: line}
+		action = MergeAction{Reason: LINE_REEMOVED_IN_BOTH_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 	}
 
 	return &action, nil
@@ -257,6 +257,7 @@ func GetMergeActionsFromMultipartFiles(original multipart.File, v1 multipart.Fil
 		}
 
 		actions = append(actions, action)
+		line++
 	}
 
 	return actions, nil

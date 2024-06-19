@@ -33,7 +33,13 @@ const (
 // If the action was not a conflict, it will include a reason for the merge and the final source that the merged line was taken from.
 // If the action was a conflict, source will be nil, and reason will be "CONFLICT"
 type MergeAction struct {
-	line   int
-	reason MergeReason
-	source MergeSource
+	Line   int         `json:"line"`
+	Reason MergeReason `json:"reason"`
+	Source MergeSource `json:"source"`
+}
+
+// Presents the results of a merge request. It contains the list of actions needed to perform a merge, and possibly the time it took
+type MergePresentation struct {
+	actions       []*MergeAction
+	timeSpentInMs int
 }
