@@ -23,7 +23,6 @@ class Merger {
         formData.append("original_file", original);
         formData.append("v1_file", v1);
         formData.append("v2_file", v2);
-        console.log(formData);
         const start = Date.now();
         const response = await fetch("http://localhost:8000/merge",
             {
@@ -50,7 +49,6 @@ class Merger {
         formData.append("original_file", original);
         formData.append("v1_file", v1);
         formData.append("v2_file", v2);
-        console.log(formData);
         const start = Date.now();
         const response = await fetch("http://localhost:8000/merge/actions",
             {
@@ -64,7 +62,6 @@ class Merger {
 
         let presentation: MergePresentation = JSON.parse(await response.text(),);
         presentation.totalTransferTimeInNanoseconds = (end - start) * 1000 * 1000;
-        console.log('presentation time: %d', presentation.timeSpentInMicroseconds);
         return presentation;
     }
 

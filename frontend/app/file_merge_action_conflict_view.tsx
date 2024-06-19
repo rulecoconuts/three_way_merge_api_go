@@ -2,6 +2,8 @@ import assert from "assert";
 import { MergeAction, MergeConflict, MergeConflictReason, MergeSource } from "./merge_presentation";
 import { Merger } from "./merger";
 import { useState } from "react";
+import LabelledBox from "./labelled_box";
+import LineRemovedMessage from "./line_removed_message";
 
 interface FileMergeActionConflictViewProps {
     original: string | null,
@@ -30,12 +32,12 @@ export default function FileMergeActionConflictView({ original, v1, v2, action }
         }
     }
 
-    if (v1Content == null) return (<></>);
+
 
     return (
-        <div className="border-solid border-red bg-white max-w-[980px] text-wrap break-words">
-            {v1Content == null ? (<></>) : (<div className=""> {"<<<Version #1"} {v1Content}</div>)}
-            {v2Content == null ? (<></>) : (<div className="">{">>>Version #2"} {v2Content}</div>)}
+        <div className="border-solid border-[#D71414] rounded-md border-2 my-5 bg-white max-w-[980px] text-wrap break-words">
+            <LabelledBox label="Version #1" labelBorder="rounded-tl" >{v1Content == null ? (<LineRemovedMessage />) : v1Content}</LabelledBox>
+            <LabelledBox label="Version #2" >{v2Content == null ? (<LineRemovedMessage />) : v2Content}</LabelledBox>
         </div>
     );
 }
