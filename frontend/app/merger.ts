@@ -1,4 +1,5 @@
-import { MergeConflict, MergePresentation } from "./merge_presentation";
+import { assert } from "console";
+import { MergeConflict, MergeConflictReason, MergePresentation, MergeSource } from "./merge_presentation";
 
 class MergeResult {
     blob: Blob;
@@ -62,9 +63,25 @@ class Merger {
         return presentation;
     }
 
-    deriveConflictReason(original: string | null, v1: string | null, v2: string | null): MergeConflict {
-        // TODO: Implement deriveConflictReason
-        throw "Unimplemented";
+    // Deduce the kind of conflict between 2 versions of some original line in a 3-way merge
+    deduceConflict(original: string | null, v1: string | null, v2: string | null): MergeConflict {
+        assert(original != null || v1 != null || v2 != null); // At least one version must be non-null
+        assert(v1 == null || v2 == null || v1 != v2); // A conflict is not possible if v1 and v2 are equal
+        assert((v1 == null && v2 != null) || (v1 != null && v2 == null)); // A conflict is not possible if the line was removed in v1 and v2
+
+        let conflict: MergeConflict;
+        if (v1 == null) {
+            // Line was removed in v1 and changed in v2
+            conflict = new MergeConflict(MergeConflictReason.LINE_REMOVED_FROM_ONE_AND_CHANGED_IN_OTHER, MergeSource.V2);
+        } else if (v2 == null) {
+            // Line was removed in v2 and changed in v1
+            conflict = new MergeConflict(MergeConflictReason.LINE_REMOVED_FROM_ONE_AND_CHANGED_IN_OTHER, MergeSource.V1);
+        } else {
+            // Line was changed in v1 and v2
+            conflict = new MergeConflict(MergeConflictReason.BOTH_CHANGED, MergeSource.V1);
+        }
+
+        return conflict;
     }
 }
 

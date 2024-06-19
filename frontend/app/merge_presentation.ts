@@ -21,6 +21,8 @@ enum MergeConflictReason {
 
 class MergeConflict {
     reason: MergeConflictReason;
+
+    // Source will always point to an existing line if it is not null
     source: MergeSource | null;
 
     constructor(
@@ -30,7 +32,6 @@ class MergeConflict {
         this.reason = reason;
         this.source = source;
     }
-
 }
 
 
@@ -42,6 +43,7 @@ class MergeConflict {
 class MergeAction {
     line: number;
     reason: MergeReason;
+    // Source will always point to an existing line if it is not null
     source: MergeSource | null;
 
     constructor(

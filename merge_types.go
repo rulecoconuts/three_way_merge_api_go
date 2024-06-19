@@ -35,6 +35,8 @@ const (
 type MergeAction struct {
 	Line   int         `json:"line"`
 	Reason MergeReason `json:"reason"`
+
+	// Source will always point to an existing line if it is not empty
 	Source MergeSource `json:"source,omitempty"`
 }
 
