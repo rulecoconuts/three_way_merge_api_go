@@ -188,9 +188,9 @@ func GetMergeAction(line int, original *string, v1 *string, v2 *string) (*MergeA
 
 		if *original == *v1 {
 			// This means that the line, which exists in the original, was removed in V2
-			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V2_MERGE_SOURCE, Line: line}
+			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
 		} else {
-			// A change was made to this line in V1, and simultaneously removed in V2. We cannot decided which is right
+			// A change was made to this line in V1, and simultaneously removed in V2. We cannot decide which is right
 			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if original != nil && v2 != nil {
@@ -198,9 +198,9 @@ func GetMergeAction(line int, original *string, v1 *string, v2 *string) (*MergeA
 
 		if *original == *v2 {
 			// This means that the line, which exists in the original, was removed in V1
-			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V1_MERGE_SOURCE, Line: line}
+			action = MergeAction{Reason: LINE_REMOVED_IN_ONE_MERGE_REASON, Source: V2_MERGE_SOURCE, Line: line}
 		} else {
-			// A change was made to this line in V2, and simultaneously removed in V1. We cannot decided which is right
+			// A change was made to this line in V2, and simultaneously removed in V1. We cannot decide which is right
 			action = MergeAction{Reason: CONFLICT_MERGE_REASON, Line: line}
 		}
 	} else if v1 != nil && v2 != nil {

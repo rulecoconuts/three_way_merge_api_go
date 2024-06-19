@@ -35,11 +35,11 @@ const (
 type MergeAction struct {
 	Line   int         `json:"line"`
 	Reason MergeReason `json:"reason"`
-	Source MergeSource `json:"source"`
+	Source MergeSource `json:"source,omitempty"`
 }
 
 // Presents the results of a merge request. It contains the list of actions needed to perform a merge, and possibly the time it took
 type MergePresentation struct {
-	actions       []*MergeAction
-	timeSpentInMs int
+	Actions                 []*MergeAction `json:"actions"`
+	TimeSpentInMicroseconds int64          `json:"timeSpentInMicroseconds"`
 }
