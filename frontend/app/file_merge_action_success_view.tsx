@@ -1,4 +1,4 @@
-import { assert } from "console";
+import assert from "assert";
 import { MergeAction, MergeSource } from "./merge_presentation";
 
 interface FileMergeActionSuccessViewProps {
@@ -9,7 +9,7 @@ interface FileMergeActionSuccessViewProps {
 }
 
 export default function FileMergeActionSuccessView({ original, v1, v2, action }: FileMergeActionSuccessViewProps) {
-    assert(original != null || v1 != null || v2 != null); // At list one version of the line must be non-null
+    assert.ok(original != null || v1 != null || v2 != null); // At list one version of the line must be non-null
     let content: string | null = null;
 
     switch (action.source) {
@@ -26,5 +26,5 @@ export default function FileMergeActionSuccessView({ original, v1, v2, action }:
 
     if (content == null) return (<></>);
 
-    return (<>{content}</>);
+    return (<div className="bg-white max-w-[980px] text-wrap break-words">{content}</div>);
 }

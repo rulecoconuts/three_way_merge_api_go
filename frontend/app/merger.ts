@@ -1,4 +1,4 @@
-import { assert } from "console";
+import assert from "assert";
 import { MergeConflict, MergeConflictReason, MergePresentation, MergeSource } from "./merge_presentation";
 
 class MergeResult {
@@ -51,6 +51,7 @@ class Merger {
         formData.append("v1_file", v1);
         formData.append("v2_file", v2);
         console.log(formData);
+        const start = Date.now();
         const response = await fetch("http://localhost:8000/merge/actions",
             {
                 method: "POST",
@@ -58,16 +59,20 @@ class Merger {
                 // headers: { 'Content-Type': 'multipart/form-data' }
             }
         );
+        const end = Date.now();
+
 
         let presentation: MergePresentation = JSON.parse(await response.text(),);
+        presentation.totalTransferTimeInNanoseconds = (end - start) * 1000 * 1000;
+        console.log('presentation time: %d', presentation.timeSpentInMicroseconds);
         return presentation;
     }
 
     // Deduce the kind of conflict between 2 versions of some original line in a 3-way merge
     deduceConflict(original: string | null, v1: string | null, v2: string | null): MergeConflict {
-        assert(original != null || v1 != null || v2 != null); // At least one version must be non-null
-        assert(v1 == null || v2 == null || v1 != v2); // A conflict is not possible if v1 and v2 are equal
-        assert((v1 == null && v2 != null) || (v1 != null && v2 == null)); // A conflict is not possible if the line was removed in v1 and v2
+        assert.ok(original != null || v1 != null || v2 != null); // At least one version must be non-null
+        assert.ok(v1 == null || v2 == null || v1 != v2); // A conflict is not possible if v1 and v2 are equal
+        assert.ok((v1 == null && v2 != null) || (v1 != null && v2 == null) || (v1 != null && v2 != null)); // A conflict is not possible if the line was removed in v1 and v2
 
         let conflict: MergeConflict;
         if (v1 == null) {

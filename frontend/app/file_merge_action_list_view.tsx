@@ -42,16 +42,18 @@ export default function FileMergeActionListView({ original, v1, v2, actions }: F
 
     if (!isReady) return (<></>);
 
-    return (<div className="">
-        {...actions.map((action) => {
+    return (
+        <div className="bg-white max-w-[980px] px-3 py-3">
+            {...actions.map((action) => {
 
-            let [oLine, v1Line, v2Line] = textFiles[action.line];
+                let [oLine, v1Line, v2Line] = textFiles[action.line];
 
-            if (action.reason != MergeReason.CONFLICT) {
-                return (<FileMergeActionSuccessView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionSuccessView>);
-            }
+                if (action.reason != MergeReason.CONFLICT) {
+                    return (<FileMergeActionSuccessView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionSuccessView>);
+                }
 
-            return (<FileMergeActionConflictView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionConflictView>);
-        })}
-    </div>);
+                return (<FileMergeActionConflictView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionConflictView>);
+            })}
+        </div>
+    );
 }

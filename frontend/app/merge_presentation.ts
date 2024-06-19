@@ -60,10 +60,12 @@ class MergeAction {
 class MergePresentation {
     actions: Array<MergeAction>;
     timeSpentInMicroseconds: number;
+    totalTransferTimeInNanoseconds: number = 0;
 
-    constructor(actions: Array<MergeAction>, timeSpentInMicroseconds: number) {
+    constructor(actions: Array<MergeAction>, timeSpentInMicroseconds: number, totalTransferTimeInNanoseconds: number = 0) {
         this.actions = actions;
         this.timeSpentInMicroseconds = timeSpentInMicroseconds;
+        this.totalTransferTimeInNanoseconds = totalTransferTimeInNanoseconds;
     }
 }
 
