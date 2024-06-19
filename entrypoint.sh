@@ -1,3 +1,4 @@
+ls /main/frontend/node_modules
 cd frontend
 npm i
 npm run build
