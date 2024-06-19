@@ -2,19 +2,22 @@
 import Image from "next/image";
 import AttachButton from "./attachbutton";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextFilePreview from "./text-file-preview";
 import TextBlobView from "./text-blob-view";
 import { Merger, MergeResult } from "./merger";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { MergePresentation } from "./merge_presentation";
+import FileMergeActionListView from "./file_merge_action_list_view";
+var pretty = require('pretty-time');
 
 export default function Home() {
-  const [merged, setMerged] = useState<MergeResult | null>(null);
+  const [merged, setMerged] = useState<MergePresentation | null>(null);
   const [original, setOriginal] = useState<File | null>(null);
-  const [a, setA] = useState<File | null>(null);
-  const [b, setB] = useState<File | null>(null);
+  const [v1, setV1] = useState<File | null>(null);
+  const [v2, setV2] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   function merge() {
@@ -23,11 +26,11 @@ export default function Home() {
       currentErr.push("Original file is required");
     }
 
-    if (a == null) {
+    if (v1 == null) {
       currentErr.push("Version #1 file is required");
     }
 
-    if (b == null) {
+    if (v2 == null) {
       currentErr.push("Version #2 file is required");
     }
 
@@ -38,15 +41,21 @@ export default function Home() {
 
     setMerged(null);
 
-    (new Merger()).merge(original!, a!, b!)
-      .then((blob) => {
-        setMerged(blob);
+    (new Merger()).getMergeActions(original!, v1!, v2!)
+      .then((presentation) => {
+        setMerged(presentation);
       });
   }
+
+  // Clear merged if any of the files change
+  useEffect(() => {
+    setMerged(null);
+  }, [original, v1, v2]);
 
   function closeError() {
     setError(null);
   }
+
 
 
   return (
@@ -60,8 +69,8 @@ export default function Home() {
         <div className="flex flex-row pt-10 items-center justify-center w-auto">
           <div className="flex flex-row flex-wrap space-x-3 items-start">
             <AttachButton label="Original Version" onFileAttached={setOriginal}></AttachButton>
-            <AttachButton label="Changed Version #1" onFileAttached={setA}></AttachButton>
-            <AttachButton label="Changed Version #2" onFileAttached={setB}></AttachButton>
+            <AttachButton label="Changed Version #1" onFileAttached={setV1}></AttachButton>
+            <AttachButton label="Changed Version #2" onFileAttached={setV2}></AttachButton>
           </div>
         </div>
         <div className="flex flex-row justify-center mt-10">
@@ -71,9 +80,9 @@ export default function Home() {
           <div>
             <div className="flex flex-row items-center">
               <h2 className="font-medium">Merged</h2>
-              <p className="text-gray-700 ml-1 text-sm">(in {merged.milliseconds} ms)</p>
+              <p className="text-gray-700 ml-1 text-sm">(in {pretty(merged.timeSpentInMicroseconds * 1000)} | Total response time: {pretty(merged.totalTransferTimeInNanoseconds)})</p>
             </div>
-            <TextBlobView blob={merged.blob} className="mt-10 bg-white px-3 py-3 max-w-[980px] text-wrap break-words"></TextBlobView>
+            <FileMergeActionListView original={original!} v1={v1!} v2={v2!} actions={merged.actions}></FileMergeActionListView>
           </div>
         )}
         <Modal open={(error?.length ?? 0) > 0} onClose={closeError} aria-labelledby="modal-modal-title"
