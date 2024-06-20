@@ -12,7 +12,7 @@ interface FileMergeActionListViewProps {
 
 async function getFilesText(original: File,
     v1: File,
-    v2: File,): Promise<[string, string, string]> {
+    v2: File): Promise<[string, string, string]> {
     return [await original.text(), await v1.text(), await v2.text()];
 }
 
@@ -38,7 +38,7 @@ export default function FileMergeActionListView({ original, v1, v2, actions }: F
                 setTextFiles(lineMatrix);
                 setReady(true);
             });
-    }, [0]);
+    }, []);
 
     if (!isReady) return (<></>);
 
@@ -49,10 +49,10 @@ export default function FileMergeActionListView({ original, v1, v2, actions }: F
                 let [oLine, v1Line, v2Line] = textFiles[action.line];
 
                 if (action.reason != MergeReason.CONFLICT) {
-                    return (<FileMergeActionSuccessView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionSuccessView>);
+                    return (<FileMergeActionSuccessView key={action.line} original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionSuccessView>);
                 }
 
-                return (<FileMergeActionConflictView original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionConflictView>);
+                return (<FileMergeActionConflictView key={action.line} original={oLine} v1={v1Line} v2={v2Line} action={action} ></FileMergeActionConflictView>);
             })}
         </div>
     );

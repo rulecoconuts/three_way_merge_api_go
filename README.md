@@ -3,6 +3,11 @@
 
 ![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
 
+<br/>
+
+![Demo Conflict Highlights](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web_conflict_highlight.png "Demo Conflict Highlightts")
+
+
 
 ## How to use
 
