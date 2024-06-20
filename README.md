@@ -5,7 +5,7 @@
 
 <br/>
 
-![Demo Conflict Highlights](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web_conflict_highlight.png "Demo Conflict Highlightts")
+![Demo Conflict Highlights](https://github.com/rulecoconuts/three_way_merge_api_go/blob/435da6190d2a022941cdcd57e74ab9ba3b2ac3eb/merge_web_conflict_highlight.png "Demo Conflict Highlightts")
 
 
 
