@@ -19,6 +19,12 @@ enum MergeConflictReason {
     LINE_REMOVED_FROM_ONE_AND_CHANGED_IN_OTHER = "LINE_REMOVED_FROM_ONE_AND_CHANGED_IN_OTHER"
 }
 
+enum MergeResolution {
+    V1 = "V1",
+    V2 = "V2",
+    KEEP_BOTH = "KEEP_BOTH"
+}
+
 class MergeConflict {
     reason: MergeConflictReason;
 
@@ -45,15 +51,19 @@ class MergeAction {
     reason: MergeReason;
     // Source will always point to an existing line if it is not null
     source: MergeSource | null;
+    resolution: MergeResolution | null;
+
 
     constructor(
         line: number,
         reason: MergeReason,
-        source: MergeSource
+        source: MergeSource,
+        resolution: MergeResolution
     ) {
         this.line = line;
         this.reason = reason;
         this.source = source;
+        this.resolution = resolution;
     }
 
 }
@@ -69,4 +79,34 @@ class MergePresentation {
     }
 }
 
-export { MergePresentation, MergeAction, MergeSource, MergeReason, MergeConflict, MergeConflictReason };
+class ResolvedContent {
+    v1: string | null;
+    v2: string | null;
+    conflict: MergeConflict;
+
+    constructor(conflict: MergeConflict, v1: string | null = null, v2: string | null = null) {
+        this.v1 = v1;
+        this.v2 = v2;
+        this.conflict = conflict;
+    }
+
+    isEmpty() {
+        return this.v1 == null && this.v2 == null;
+    }
+
+    toString(): string {
+        let builder: string[] = [];
+
+        if (this.v1 != null) {
+            builder.push(this.v1);
+        }
+
+        if (this.v2 != null) {
+            builder.push(this.v2);
+        }
+
+        return builder.join("\n");
+    }
+}
+
+export { MergePresentation, MergeAction, MergeSource, MergeReason, MergeConflict, MergeConflictReason, MergeResolution, ResolvedContent };
