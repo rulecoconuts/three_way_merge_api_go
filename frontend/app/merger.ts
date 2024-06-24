@@ -1,5 +1,5 @@
 import assert from "assert";
-import { MergeConflict, MergeConflictReason, MergePresentation, MergeSource } from "./merge_presentation";
+import { MergeAction, MergeConflict, MergeConflictReason, MergePresentation, MergeResolution, MergeSource, ResolvedContent } from "./merge_presentation";
 
 class MergeResult {
     blob: Blob;
@@ -84,6 +84,53 @@ class Merger {
         }
 
         return conflict;
+    }
+
+    /**
+     * Return the content that should be displayed based on the kind of conflict and resolution
+     * @param original 
+     * @param v1 
+     * @param v2 
+     * @param action 
+     * @returns 
+     */
+    resolveContent(original: string | null, v1: string | null, v2: string | null, action: MergeAction): ResolvedContent {
+        const conflict = this.deduceConflict(original, v1, v2);
+        const content = new ResolvedContent(conflict);
+
+        // Deduce content from conflicts without resolution
+        if (conflict.reason == MergeConflictReason.BOTH_CHANGED) {
+            content.v1 = v1;
+            content.v2 = v2;
+        } else {
+            // Line removed from one
+            switch (conflict.source) {
+                case MergeSource.V1:
+                    content.v1 = v1;
+                case MergeSource.V2:
+                    content.v2 = v2;
+            }
+        }
+
+        if (action.resolution == null) return content;
+
+        // Resolution exists. We have to take it into account
+        switch (action.resolution) {
+            case MergeResolution.V1:
+                // WE ONLY NEED V1
+                content.v2 = null;
+                break;
+            case MergeResolution.V2:
+                // WE ONLY NEED V2
+                content.v1 = null;
+                break;
+            case MergeResolution.KEEP_BOTH:
+                // KEEP V1 AND V2
+                break;
+        }
+
+
+        return content;
     }
 }
 
