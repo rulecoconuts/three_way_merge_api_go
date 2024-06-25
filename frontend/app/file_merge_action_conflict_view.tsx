@@ -15,11 +15,11 @@ interface FileMergeActionConflictViewProps {
 
 export default function FileMergeActionConflictView({ original, v1, v2, action }: FileMergeActionConflictViewProps) {
     assert.ok(original != null || v1 != null || v2 != null); // At list one version of the line must be non-null
-    let [content, setContent] = useState<ResolvedContent>((new Merger()).resolveContent(original, v1, v2, action));
+    let [content, setContent] = useState<ResolvedContent>((new Merger()).resolveContentFromConflict(original, v1, v2, action));
 
     function resolve(resolution: MergeResolution | null) {
         action.resolution = resolution;
-        setContent((new Merger()).resolveContent(original, v1, v2, action));
+        setContent((new Merger()).resolveContentFromConflict(original, v1, v2, action));
     }
 
     let v1Content: string | null = content.v1;
