@@ -1,5 +1,5 @@
 import assert from "assert";
-import { MergeAction, MergeConflict, MergeConflictReason, MergePresentation, MergeResolution, MergeSource, ResolvedContent } from "./merge_presentation";
+import { MergeAction, MergeConflict, MergeConflictReason, MergePresentation, MergeReason, MergeResolution, MergeSource, ResolvedContent } from "./merge_presentation";
 
 class MergeResult {
     blob: Blob;
@@ -94,7 +94,7 @@ class Merger {
      * @param action 
      * @returns 
      */
-    resolveContent(original: string | null, v1: string | null, v2: string | null, action: MergeAction): ResolvedContent {
+    resolveContentFromConflict(original: string | null, v1: string | null, v2: string | null, action: MergeAction): ResolvedContent {
         const conflict = this.deduceConflict(original, v1, v2);
         const content = new ResolvedContent(conflict);
 
@@ -131,6 +131,69 @@ class Merger {
 
 
         return content;
+    }
+
+    resolveContentFromSuccess(original: string | null, v1: string | null, v2: string | null, action: MergeAction): string | null {
+        let content: string | null = null;
+
+        switch (action.source) {
+            case MergeSource.ORIGINAL:
+                content = original!;
+                break;
+            case MergeSource.V1:
+                content = v1!;
+                break;
+            case MergeSource.V2:
+                content = v2!;
+                break;
+        }
+
+        return content;
+    }
+
+    /**
+     * Resolve text lines from the original, v1, and v2 files based on the actions specified for each line
+     * @param textLines 
+     * @param actions 
+     */
+    resolveActionsIntoText(textLines: [string | null, string | null, string | null][], actions: MergeAction[]): string {
+        return actions.map((action) => {
+            let [oLine, v1Line, v2Line] = textLines[action.line];
+            let content: string | null = "";
+            if (action.reason != MergeReason.CONFLICT) {
+                // Successful merge
+                content = this.resolveContentFromSuccess(oLine, v1Line, v2Line, action);
+            } else {
+                // Conflict
+                content = this.getTextContentFromResolvedConflictContent(this.resolveContentFromConflict(oLine, v1Line, v2Line, action), action);
+            }
+
+            return content
+        })
+            .filter((txt) => txt != null)
+            .join("\n");
+    }
+
+    getTextContentFromResolvedConflictContent(content: ResolvedContent, action: MergeAction): string {
+        if (action.resolution != null) return content.toString(); // Conflict has already been resolved
+
+        // Conflict has not been resolved. Label conflicts
+        let v1Marker = "<".repeat(11) + " Change from version #1";
+        let v2Marker = ">".repeat(11) + " Change from version #2";
+
+        let builder: string[] = [];
+
+        builder.push(v1Marker);
+        if (content.v1 != null) {
+            builder.push(content.v1);
+        }
+
+        builder.push(v2Marker);
+        if (content.v2 != null) {
+            builder.push(content.v2);
+        }
+
+        return builder.join("\n");
     }
 }
 

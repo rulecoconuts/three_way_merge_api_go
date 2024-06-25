@@ -11,7 +11,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { MergePresentation } from "./merge_presentation";
 import FileMergeActionListView from "./file_merge_action_list_view";
-var pretty = require('pretty-time');
+import MergePresentationView from "./merge_presentation_view";
 
 export default function Home() {
   const [merged, setMerged] = useState<MergePresentation | null>(null);
@@ -56,8 +56,6 @@ export default function Home() {
     setError(null);
   }
 
-
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-start p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-center font-mono text-sm lg:flex">
@@ -77,13 +75,7 @@ export default function Home() {
           <Button variant="contained" color="primary" sx={{ px: 15 }} onClick={merge}>Merge</Button>
         </div>
         {merged == null ? (<></>) : (
-          <div>
-            <div className="flex flex-row items-center">
-              <h2 className="font-medium">Merged</h2>
-              <p className="text-gray-700 ml-1 text-sm">(in {pretty(merged.timeSpentInMicroseconds * 1000)} | Total response time: {pretty(merged.totalTransferTimeInNanoseconds)})</p>
-            </div>
-            <FileMergeActionListView original={original!} v1={v1!} v2={v2!} actions={merged.actions}></FileMergeActionListView>
-          </div>
+          <div className="mt-2"> <MergePresentationView presentation={merged} original={original!} v1={v1!} v2={v2!} /> </div>
         )}
         <Modal open={(error?.length ?? 0) > 0} onClose={closeError} aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description">
