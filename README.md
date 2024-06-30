@@ -1,6 +1,8 @@
 # three_way_merge_api_go
  An API that attempts to automatically merge the changes in 2 files against an original file. This project is designed to improve the efficiency and correctness of the 3-way merge algorithm. It is a component of the Langresus project.
 
+ ![Screen Recording flow](https://drive.google.com/uc?export=view&id=18QRm8eSqMwGqqMZ5hz6zoeB9Sy1rOANK "Screen Recording flow")
+
 ![Demo](https://github.com/rulecoconuts/three_way_merge_api_go/blob/160f27c87b9f8149e3676e1d994db6b0c6198603/merge_web.png "Demo")
 
 <br/>

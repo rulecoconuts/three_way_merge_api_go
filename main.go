@@ -40,7 +40,7 @@ func main() {
 		v2File.Close()
 	})
 
-	// Get a list of actions needed to perform a merge on an original_file, a_file, and b_file
+	// Get a list of actions needed to perform a merge on an original_file, v1_file, and v2_file
 	router.POST("/merge/actions", func(c *gin.Context) {
 
 		form, _ := c.MultipartForm()
@@ -69,6 +69,8 @@ func main() {
 			c.AbortWithError(500, err)
 		}
 
+		// We are measuring time in microseconds because the average time measured during tests ended up as microseconds.
+		// even if we obtain a time in a higher unit, the requester can always perform a conversion
 		c.JSON(http.StatusOK, MergePresentation{Actions: actions, TimeSpentInMicroseconds: elapsed.Microseconds()})
 
 		originalFile.Close()

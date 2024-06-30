@@ -11,6 +11,10 @@ class MergeResult {
 }
 
 class Merger {
+    getUrl(): string {
+        return process.env.MERGE_API_URL ?? "http://localhost:8000";
+    }
+
     /**
      * Get the merged version obtained from performing a 3-way merge
      * @param original 
@@ -24,7 +28,7 @@ class Merger {
         formData.append("v1_file", v1);
         formData.append("v2_file", v2);
         const start = Date.now();
-        const response = await fetch("http://localhost:8000/merge",
+        const response = await fetch(this.getUrl() + "/merge",
             {
                 method: "POST",
                 body: formData,
@@ -50,7 +54,7 @@ class Merger {
         formData.append("v1_file", v1);
         formData.append("v2_file", v2);
         const start = Date.now();
-        const response = await fetch("http://localhost:8000/merge/actions",
+        const response = await fetch(this.getUrl() + "/merge/actions",
             {
                 method: "POST",
                 body: formData,
