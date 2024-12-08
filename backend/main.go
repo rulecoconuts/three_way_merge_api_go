@@ -1,18 +1,42 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 )
 
-func main() {
-	// gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
+var ginLambda *ginadapter.GinLambda
 
-	router.POST("/merge", func(c *gin.Context) {
+func generateEngine() *gin.Engine {
+	engine := gin.Default()
+
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowWildcard = true
+	// corsConfig.AllowOrigins = []string{"https://ofejiro.com", "https://*.ofejiro.com", "*"}
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowCredentials = true
+	corsConfig.AddAllowHeaders("Origin")
+
+	engine.Use(cors.New(corsConfig))
+
+	// router.Use(cors.New(cors.Config{
+	// 	AllowOrigins:     []string{"*"},
+	// 	AllowHeaders:     []string{"Origin"},
+	// 	ExposeHeaders:    []string{"Content-Length"},
+	// 	AllowCredentials: true,
+	// }))
+
+	engine.POST("/merge", func(c *gin.Context) {
 
 		form, _ := c.MultipartForm()
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -41,7 +65,7 @@ func main() {
 	})
 
 	// Get a list of actions needed to perform a merge on an original_file, v1_file, and v2_file
-	router.POST("/merge/actions", func(c *gin.Context) {
+	engine.POST("/merge/actions", func(c *gin.Context) {
 
 		form, _ := c.MultipartForm()
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -78,5 +102,18 @@ func main() {
 		v2File.Close()
 	})
 
-	router.Run(":8000")
+	return engine
+}
+
+func init() {
+	ginLambda = ginadapter.New(generateEngine())
+}
+
+func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.ProxyWithContext(ctx, request)
+}
+
+func main() {
+	gin.SetMode(gin.ReleaseMode)
+	lambda.Start(Handler)
 }

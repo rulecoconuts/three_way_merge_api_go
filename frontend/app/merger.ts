@@ -12,7 +12,7 @@ class MergeResult {
 
 class Merger {
     getUrl(): string {
-        return process.env.MERGE_API_URL ?? "http://localhost:8000";
+        return process.env.NEXT_PUBLIC_BACKEND_URL || process.env.BACKEND_URL || "";
     }
 
     /**

@@ -1,4 +1,7 @@
+cd backend
 go mod tidy
+
 cd frontend
 npm i
-go run .. & npm run dev && kill $!
+
+go run ../backend & npm run dev && kill $!
